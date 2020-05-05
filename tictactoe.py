@@ -22,16 +22,16 @@ screen = pg.display.set_mode((width, height+100),0,32)
 pg.display.set_caption("Tic Tac Toe")
 
 #loading the images
-opening=pg.image.load('tictactoeopening.png')
-x_img=pg.image.load('x.png')
-o_img=pg.image.load('o.png')
+opening = pg.image.load('tictacopening.png')
+x_img = pg.image.load('x.png')
+o_img = pg.image.load('o.png')
 
 #resizing images
-x_img= pg.transform.scale(x_img,(80,80))
-o_img= pg.transform.scale(o_img,(80,80))
+x_img = pg.transform.scale(x_img, (80,80))
+o_img = pg.transform.scale(o_img, (80,80))
 opening = pg.transform.scale(opening, (width, height+100))
 
-#define functions
+
 def game_opening():
     screen.blit(opening,(0,0))
     pg.display.update()
@@ -67,16 +67,17 @@ def draw_status():
     pg.display.update()
 
 def check_win():
-	global TTT, winner, draw
-	
-	#check for winning rows
-	for row in range (0,3):
+    global TTT, winner,draw
+
+    # check for winning rows
+    for row in range (0,3):
         if ((TTT [row][0] == TTT[row][1] == TTT[row][2]) and(TTT [row][0] is not None)):
             # this row won
             winner = TTT[row][0]
             pg.draw.line(screen, (250,0,0), (0, (row + 1)*height/3 -height/6),\
                               (width, (row + 1)*height/3 - height/6 ), 4)
             break
+
     # check for winning columns
     for col in range (0, 3):
         if (TTT[0][col] == TTT[1][col] == TTT[2][col]) and (TTT[0][col] is not None):
@@ -86,18 +87,23 @@ def check_win():
             pg.draw.line (screen, (250,0,0),((col + 1)* width/3 - width/6, 0),\
                           ((col + 1)* width/3 - width/6, height), 4)
             break
+
     # check for diagonal winners
     if (TTT[0][0] == TTT[1][1] == TTT[2][2]) and (TTT[0][0] is not None):
         # game won diagonally left to right
         winner = TTT[0][0]
         pg.draw.line (screen, (250,70,70), (50, 50), (350, 350), 4)
+       
+
     if (TTT[0][2] == TTT[1][1] == TTT[2][0]) and (TTT[0][2] is not None):
         # game won diagonally right to left
         winner = TTT[0][2]
         pg.draw.line (screen, (250,70,70), (350, 50), (50, 350), 4)
+    
     if(all([all(row) for row in TTT]) and winner is None ):
         draw = True
-	draw_status()
+    draw_status()
+
 
 def drawXO(row,col):
     global TTT,XO
@@ -106,30 +112,31 @@ def drawXO(row,col):
     if row==2:
         posx = width/3 + 30
     if row==3:
-        posx = 2*width/3 + 30
+        posx = width/3*2 + 30
+
     if col==1:
         posy = 30
     if col==2:
         posy = height/3 + 30
     if col==3:
-        posy = 2*height/3 + 30
-	
-	TTT[row-1][col-1] = XO
-    
-	if(XO == 'x'):
+        posy = height/3*2 + 30
+    TTT[row-1][col-1] = XO
+    if(XO == 'x'):
         screen.blit(x_img,(posy,posx))
-		XO= 'o'
-	else:
+        XO= 'o'
+    else:
         screen.blit(o_img,(posy,posx))
         XO= 'x'
-    
-	pg.display.update()
+    pg.display.update()
     #print(posx,posy)
     #print(TTT)
+   
+    
 
 def userClick():
     #get coordinates of mouse click
     x,y = pg.mouse.get_pos()
+
     #get column of mouse click (1-3)
     if(x<width/3):
         col = 1
@@ -139,6 +146,7 @@ def userClick():
         col = 3
     else:
         col = None
+        
     #get row of mouse click (1-3)
     if(y<height/3):
         row = 1
@@ -149,11 +157,16 @@ def userClick():
     else:
         row = None
     #print(row,col)
+    
+
     if(row and col and TTT[row-1][col-1] is None):
         global XO
+        
         #draw the x or o on screen
         drawXO(row,col)
         check_win()
+        
+        
 
 def reset_game():
     global TTT, winner,XO, draw
@@ -163,9 +176,11 @@ def reset_game():
     game_opening()
     winner=None
     TTT = [[None]*3,[None]*3,[None]*3]
-	
+    
+
 game_opening()
-# run the game loop forever until end
+
+# run the game loop forever
 while(True):
     for event in pg.event.get():
         if event.type == QUIT:
@@ -176,8 +191,10 @@ while(True):
             userClick()
             if(winner or draw):
                 reset_game()
+            
     pg.display.update()
     CLOCK.tick(fps)
+
 	
 
 	
